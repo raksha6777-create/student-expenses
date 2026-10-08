@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Budget — Take Control of Your Money</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #faf8ff;
+    --section: #f2f3ff;
+    --surface: #ffffff;
+    --surface-2: #eaedff;
+    --line: #dae2fd;
+    --text: #131b2e;
+    --muted: #3f493f;
+    --green: #15803d;
+    --green-dark: #006d3e;
+    --green-deep: #00652c;
+    --green-soft: #8cf5b2;
+    --amber: #9c6300;
+    --amber-soft: #ffddb8;
+    --amber-text: #7b4d00;
+    --red: #ba1a1a;
+    --red-soft: #ffdad6;
+    --red-text: #93000a;
+    --primary: #006d3e;
+    --shadow: 0 10px 30px rgba(19, 27, 46, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; line-height: 1.15; }
+  img, svg { max-width: 100%; display: block; }
+  button, input { font: inherit; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .section { padding: 96px 0; position: relative; }
+  .section.alt { background: var(--section); }
+
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green-dark);
+  }
+  .section-head { text-align: center; max-width: 768px; margin: 0 auto 48px; }
+  .section-head h2 { font-size: 40px; font-weight: 800; margin: 12px 0 14px; }
+  .section-head p { color: var(--muted); font-size: 18px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    height: 52px; padding: 0 28px; border-radius: 16px; border: none;
+    font-weight: 700; font-size: 16px; cursor: pointer; text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 8px 20px rgba(0,109,62,.25); }
+  .btn-primary:hover { background: var(--green-deep); }
+  .btn-ghost { background: var(--surface); color: var(--text); border: 1px solid var(--line); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+  .card {
+    background: var(--surface); border-radius: 24px; box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .icon-box {
+    width: 48px; height: 48px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 20px;
+  }
+  .grid { display: grid; gap: 24px; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-6 { grid-template-columns: repeat(3, 1fr); }
+  .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .card p { color: var(--muted); font-size: 15px; }
+  .pill {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    padding: 6px 12px; border-radius: 9999px; margin-top: 16px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero { padding: 80px 0 96px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; top: -140px; right: -120px; width: 620px; height: 420px;
+    background: radial-gradient(closest-side, rgba(140,245,178,.45), rgba(140,245,178,0));
+    filter: blur(20px); pointer-events: none;
+  }
+  .hero-wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface-2); color: var(--green-dark);
+    padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600;
+  }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .hero h1 { font-size: 56px; font-weight: 800; margin: 22px 0 18px; letter-spacing: -0.02em; }
+  .hero h1 span { color: var(--green-dark); }
+  .hero p.lead { font-size: 18px; color: var(--muted); max-width: 576px; }
+  .cta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 32px; }
+  .trust { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 32px; font-size: 14px; color: var(--muted); }
+  .trust span { display: inline-flex; align-items: center; gap: 8px; }
+  .trust .check { color: var(--green); font-weight: 800; }
+
+  .dash-preview { position: relative; }
+  .dash-preview .float-pill {
+    position: absolute; top: -16px; right: 24px; background: #fff; color: var(--green-dark);
+    padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+  .dash-card { background: #fff; border-radius: 24px; box-shadow: var(--shadow); padding: 24px; }
+  .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .dash-head small { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+  .dash-head h3 { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .dash-tag { background: var(--surface-2); color: var(--green-dark); padding: 6px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .metric { background: var(--section); border-radius: 16px; padding: 16px; }
+  .metric small { color: var(--muted); font-size: 12px; font-weight: 600; }
+  .metric strong { display: block; font-size: 24px; font-family: 'Plus Jakarta Sans', sans-serif; margin: 6px 0 4px; }
+  .metric em { font-style: normal; font-size: 12px; color: var(--muted); }
+  .leak-title { display: flex; justify-content: space-between; margin: 22px 0 12px; font-weight: 700; font-size: 15px; }
+  .leak-title small { color: var(--muted); font-weight: 500; }
+  .quick-add { display: flex; align-items: center; justify-content: space-between; background: var(--surface-2); border-radius: 16px; padding: 14px 16px; margin-top: 18px; }
+  .quick-add span { font-weight: 600; font-size: 14px; }
+  .quick-add button { background: var(--primary); color: #fff; border: none; border-radius: 12px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
+
+  .bar-row { margin-bottom: 14px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .bar-label small { color: var(--muted); font-weight: 500; }
+  .bar { height: 10px; border-radius: 9999px; background: var(--surface-2); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 9999px; }
+
+  /* ---------- PROBLEM ---------- */
+  .problem-card { display: flex; flex-direction: column; }
+  .problem-card .icon-box { background: var(--red-soft); color: var(--red); }
+  .problem-card .foot { margin-top: auto; padding-top: 18px; }
+  .problem-card .foot .pill { background: var(--red-soft); color: var(--red-text); margin-top: 0; }
+
+  /* ---------- FEATURES ---------- */
+  .feature { padding: 28px; }
+  .feature .icon-box { background: var(--surface-2); color: var(--green-dark); }
+
+  /* ---------- SOLUTION ---------- */
+  .steps .card { position: relative; display: flex; flex-direction: column; }
+  .step-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 40px; font-weight: 800; color: var(--green-soft); line-height: 1; margin-bottom: 14px; }
+  .steps .foot { margin-top: auto; padding-top: 18px; }
+  .steps .foot .pill { background: var(--surface-2); color: var(--green-dark); margin-top: 0; }
+
+  /* ---------- SHOWCASE ---------- */
+  .app-shell { background: #fff; border-radius: 28px; box-shadow: var(--shadow); padding: 32px; max-width: 1024px; margin: 0 auto; }
+  .app-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .app-top small { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+  .app-top h3 { font-size: 22px; font-weight: 700; margin-top: 4px; }
+  .status-pill { background: var(--surface-2); color: var(--green-dark); padding: 8px 16px; border-radius: 9999px; font-weight: 600; font-size: 13px; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .stat { background: var(--section); border-radius: 16px; padding: 18px; }
+  .stat small { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .stat strong { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; margin-top: 6px; }
+  .guard { background: var(--section); border-radius: 20px; padding: 22px; margin-bottom: 20px; }
+  .guard-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .guard h4 { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .guard .big { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: var(--green-dark); margin-top: 6px; }
+  .guard-cells { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+  .guard-cells div { background: #fff; border-radius: 14px; padding: 14px; }
+  .guard-cells small { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .guard-cells strong { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; margin-top: 4px; }
+  .breakdown h4 { font-size: 18px; font-weight: 700; margin-bottom: 18px; }
+
+  /* ---------- SMART SAVING ---------- */
+  .saving-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .saving-wrap h2 { font-size: 40px; font-weight: 800; margin: 12px 0 18px; }
+  .saving-wrap p { color: var(--muted); font-size: 17px; margin-bottom: 14px; }
+  .saving-note { display: flex; gap: 12px; align-items: flex-start; background: var(--surface-2); border-radius: 16px; padding: 16px; margin-top: 20px; }
+  .saving-note b { display: block; font-size: 15px; }
+  .saving-note span { font-size: 14px; color: var(--muted); }
+  .goal-card { background: #fff; border-radius: 28px; box-shadow: var(--shadow); padding: 32px; }
+  .goal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+  .goal-head h3 { font-size: 22px; font-weight: 700; }
+  .goal-head h3 + small { color: var(--muted); }
+  .goal-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 22px; }
+  .goal-stats div { background: var(--section); border-radius: 16px; padding: 16px; }
+  .goal-stats small { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .goal-stats strong { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; margin-top: 6px; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .progress-meta small { color: var(--muted); font-weight: 500; }
+  .big-bar { height: 12px; border-radius: 9999px; background: var(--surface-2); overflow: hidden; margin-bottom: 22px; }
+  .big-bar > i { display: block; height: 100%; width: 25%; background: linear-gradient(90deg, var(--green-dark), var(--green-soft)); border-radius: 9999px; }
+  .goal-card .btn { width: 100%; }
+  .badge-pill { background: var(--surface-2); color: var(--green-dark); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 9999px; }
+
+  /* ---------- CAMPUS HACKS ---------- */
+  .hack { display: flex; flex-direction: column; }
+  .hack .icon-box { background: var(--surface-2); }
+  .hack .budget { margin-top: auto; background: var(--section); border-radius: 14px; padding: 14px; }
+  .hack .budget small { display: block; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .hack .budget strong { display: block; color: var(--green-dark); font-size: 16px; margin-top: 4px; }
+
+  /* ---------- DIRECTORY ---------- */
+  .hubs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+  .hub { background: #fff; border-radius: 20px; box-shadow: var(--shadow); padding: 20px 14px; text-align: center; }
+  .hub .icon-circle { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: var(--surface-2); }
+  .hub h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .hub p { font-size: 13px; color: var(--muted); }
+  .directory-bottom { margin-top: 36px; background: #fff; border-radius: 24px; box-shadow: var(--shadow); padding: 24px 28px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .directory-bottom h4 { font-size: 18px; font-weight: 700; }
+  .directory-bottom p { color: var(--muted); font-size: 15px; }
+
+  /* ---------- FINANCIAL STATUS ---------- */
+  .status-card { display: flex; flex-direction: column; }
+  .status-card .icon-box { font-size: 22px; }
+  .status-card.safe .icon-box { background: var(--surface-2); color: var(--green-dark); }
+  .status-card.warn .icon-box { background: var(--amber-soft); color: var(--amber-text); }
+  .status-card.alert .icon-box { background: var(--red-soft); color: var(--red); }
+  .status-card .sub { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px; }
+  .status-card .meter { margin-top: auto; background: var(--section); border-radius: 16px; padding: 16px; }
+  .status-card .meter .bar-label { margin-bottom: 8px; }
+  .status-card.safe .meter .bar > i { background: var(--green); }
+  .status-card.warn .meter .bar > i { background: var(--amber); }
+  .status-card.alert .meter .bar > i { background: var(--red); }
+  .status-card.safe .card { border-top: 4px solid var(--green); }
+
+  /* ---------- SAVINGS CALCULATOR ---------- */
+  .calc-wrap { background: #fff; border-radius: 32px; box-shadow: var(--shadow); padding: 48px; max-width: 896px; margin: 0 auto; }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 36px; align-items: center; }
+  .field { margin-bottom: 24px; }
+  .field label { display: block; font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+  .input-wrap { display: flex; align-items: center; background: var(--section); border: 1px solid var(--line); border-radius: 16px; padding: 0 16px; height: 56px; }
+  .input-wrap b { color: var(--muted); margin-right: 10px; font-weight: 600; }
+  .input-wrap input { border: none; background: transparent; outline: none; width: 100%; font-size: 18px; font-weight: 600; color: var(--text); }
+  .calc-result { background: var(--surface-2); border-radius: 24px; padding: 32px; text-align: center; }
+  .calc-result small { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green-dark); }
+  .calc-result .amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 48px; font-weight: 800; color: var(--green-deep); margin: 12px 0; }
+  .calc-result p { color: var(--muted); font-size: 15px; margin-bottom: 22px; }
+  .calc-result .btn { width: 100%; }
+  .calc-result .sub-amount { font-size: 14px; color: var(--green-dark); font-weight: 600; margin-top: 6px; }
+
+  /* ---------- BENEFITS ---------- */
+  .benefit .icon-box { background: var(--surface-2); color: var(--green-dark); }
+
+  /* ---------- FINAL CTA + FORM ---------- */
+  .final { padding: 64px 0 80px; }
+  .final-card {
+    background: linear-gradient(135deg, #00652c 0%, #006d3e 55%, #15803d 100%);
+    color: #fff; border-radius: 40px; padding: 72px 56px; position: relative; overflow: hidden; text-align: center;
+    box-shadow: 0 24px 60px rgba(0,101,44,.25);
+  }
+  .final-card::after {
+    content: ""; position: absolute; right: -120px; bottom: -120px; width: 380px; height: 380px;
+    border-radius: 50%; background: rgba(140,245,178,.18);
+  }
+  .final-card .eyebrow { color: var(--green-soft); }
+  .final-card h2 { font-size: 48px; font-weight: 800; margin: 16px auto 14px; max-width: 760px; }
+  .final-card p.lead { font-size: 18px; color: #d8ffe6; max-width: 620px; margin: 0 auto; }
+  .lead-form { position: relative; z-index: 1; max-width: 560px; margin: 36px auto 0; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 24px; padding: 28px; text-align: left; }
+  .lead-form .row { display: grid; gap: 14px; }
+  .lead-form label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #e8fff0; }
+  .lead-form input {
+    width: 100%; height: 50px; padding: 0 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,.35);
+    background: #fff; color: var(--text); font-size: 15px; outline: none;
+  }
+  .lead-form input:focus { border-color: var(--green-soft); box-shadow: 0 0 0 3px rgba(140,245,178,.4); }
+  .lead-form .btn { width: 100%; margin-top: 18px; background: #fff; color: var(--green-deep); box-shadow: none; }
+  .lead-form .btn:hover { background: var(--green-soft); }
+  .form-msg { margin-top: 14px; font-size: 14px; min-height: 20px; text-align: center; }
+  .form-msg.ok { color: #d8ffe6; font-weight: 600; }
+  .form-msg.err { color: #ffdad6; font-weight: 600; }
+  .pay-box { display: none; margin-top: 16px; text-align: center; }
+  .pay-box.show { display: block; }
+  .pay-box a { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 28px; border-radius: 16px; background: #fff; color: var(--green-deep); font-weight: 700; text-decoration: none; }
+  .final-foot { margin-top: 28px; font-size: 14px; color: #bff5d2; position: relative; z-index: 1; }
+
+  footer { padding: 28px 0 40px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .hubs { grid-template-columns: repeat(3, 1fr); }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .hero-wrap, .saving-wrap, .calc-grid { grid-template-columns: 1fr; }
+    .grid-3, .grid-6 { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 42px; }
+    .section-head h2, .saving-wrap h2 { font-size: 32px; }
+    .final-card h2 { font-size: 36px; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    .section { padding: 64px 0; }
+    .grid-3, .grid-4, .grid-6, .hubs { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 34px; }
+    .hero p.lead { font-size: 16px; }
+    .metric-grid, .goal-stats, .guard-cells { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .calc-wrap { padding: 28px 20px; }
+    .final-card { padding: 48px 24px; border-radius: 28px; }
+    .final-card h2 { font-size: 30px; }
+    .app-shell { padding: 20px; }
+    .dash-card { padding: 18px; }
+    .btn { width: 100%; }
+    .cta-row .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. HERO ============ -->
+<section class="hero">
+  <div class="container hero-wrap">
+    <div>
+      <span class="badge"><span class="dot"></span>Built by students, for students • 100% Free</span>
+      <h1>Take Control of Your <span>Student Budget</span></h1>
+      <p class="lead">Track your daily expenses, understand where your money goes, and build better saving habits — all in one simple, stress-free place.</p>
+      <div class="cta-row">
+        <a href="#final" class="btn btn-primary">Start Tracking My Expenses &rarr;</a>
+        <a href="#solution" class="btn btn-ghost">See How It Works</a>
+      </div>
+      <div class="trust">
+        <span><b class="check">✓</b> Free</span>
+        <span><b class="check">✓</b> Simple</span>
+        <span><b class="check">✓</b> No bank login needed</span>
+      </div>
+    </div>
+
+    <div class="dash-preview">
+      <div class="float-pill">● Live preview</div>
+      <div class="dash-card">
+        <div class="dash-head">
+          <div>
+            <small>November 2025</small>
+            <h3>Campus Wallet</h3>
+          </div>
+          <span class="dash-tag">Monthly</span>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><small>Monthly Budget</small><strong>₹10,000</strong><em>Pocket money + stipend</em></div>
+          <div class="metric"><small>Money Spent</small><strong>₹3,250</strong><em>32.5% of limit</em></div>
+          <div class="metric"><small>Money Left</small><strong>₹6,750</strong><em>Safe to spend</em></div>
+          <div class="metric"><small>Saved for Goal</small><strong>₹2,000</strong><em>20% to New Laptop</em></div>
+        </div>
+        <div class="leak-title">Category Leakage Breakdown <small>Last 7 Days</small></div>
+        <div class="bar-row">
+          <div class="bar-label">Food <small>₹1,200</small></div>
+          <div class="bar"><i style="width:70%;background:var(--green)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Transport <small>₹500</small></div>
+          <div class="bar"><i style="width:45%;background:var(--amber)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Shopping <small>₹800</small></div>
+          <div class="bar"><i style="width:55%;background:var(--red)"></i></div>
+        </div>
+        <div class="quick-add">
+          <span>Quick Add ₹40</span>
+          <button type="button">Log Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. PROBLEM ============ -->
+<section class="section alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">THE REAL COLLEGE DILEMMA</span>
+      <h2>Where Does Your Money Go?</h2>
+      <p>Small everyday expenses can turn into a big shock when checking your bank account on the 25th of the month.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card problem-card">
+        <div class="icon-box">🍟</div>
+        <h3>Daily Food &amp; Snacks</h3>
+        <p>Small purchases add up rapidly. A chai here, a canteen snack there — ₹100 a day quietly turns into ₹3,000 every single month.</p>
+        <div class="foot"><span class="pill">Avg. Student Bleed: ₹3,000/mo</span></div>
+      </div>
+      <div class="card problem-card">
+        <div class="icon-box">🚕</div>
+        <h3>Unplanned Travel</h3>
+        <p>Emergency auto rides, missed metro cards, and surge pricing cabs chew through your weekly allowance before Friday arrives.</p>
+        <div class="foot"><span class="pill">Avg. Student Bleed: ₹1,500/mo</span></div>
+      </div>
+      <div class="card problem-card">
+        <div class="icon-box">🛍️</div>
+        <h3>Impulse Purchases</h3>
+        <p>Online flash sales, sudden peer hangouts, food delivery apps, and random stationary buys drop your reserves to zero.</p>
+        <div class="foot"><span class="pill">Avg. Student Bleed: ₹2,200/mo</span></div>
+      </div>
+      <div class="card problem-card">
+        <div class="icon-box">❓</div>
+        <h3>Zero Tracking</h3>
+        <p>Without active records, students guess their balance blindly until an ATM or UPI scanner gives an "Insufficient Funds" notice.</p>
+        <div class="foot"><span class="pill">Blind spending</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. FEATURES ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">FEATURES CRAFTED FOR STUDENTS</span>
+      <h2>Everything You Need to Spend Smarter</h2>
+      <p>Simple, intuitive, and practical tools built specifically for university and college lifestyles.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card feature"><div class="icon-box">📊</div><h3>Budget Dashboard</h3><p>See your total budget, total spend, money left, and savings reserve in a single glance. No digging through messy bank statements.</p></div>
+      <div class="card feature"><div class="icon-box">⚡</div><h3>Quick Expense Tracking</h3><p>Record canteen snacks, bus tickets, or printouts in under 5 seconds. Categorize with friendly icons without typing long notes.</p></div>
+      <div class="card feature"><div class="icon-box">📈</div><h3>Spending Insights</h3><p>Instantly see whether food, travel, or hangouts take the biggest bite of your allowance with easy color-coded visual cues.</p></div>
+      <div class="card feature"><div class="icon-box">🛡️</div><h3>Daily Safe Budget</h3><p>Know exactly how much you can spend each day (e.g. ₹300/day) so you never run completely empty before the month ends.</p></div>
+      <div class="card feature"><div class="icon-box">🎯</div><h3>Future Savings Goals</h3><p>Set clear targets like a new phone, internship clothes, semester fees, or weekend road trip and watch your progress bar fill up.</p></div>
+      <div class="card feature"><div class="icon-box">🎓</div><h3>Smart Campus Suggestions</h3><p>Get practical, peer-tested hacks for affordable food, second-hand books, bus passes, and campus discounts that actually work.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. SOLUTION PIPELINE ============ -->
+<section class="section alt" id="solution">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">THE SOLUTION</span>
+      <h2>One Simple Place to Manage Your Money</h2>
+      <p>The 4-step framework engineered to put you in complete command of your pocket money, allowance, and stipend.</p>
+    </div>
+    <div class="grid grid-4 steps">
+      <div class="card">
+        <div class="step-num">01</div>
+        <h3>Set Your Budget</h3>
+        <p>Enter the amount available for the month — pocket money, family allowance, freelance income, or scholarship stipend.</p>
+        <div class="foot"><span class="pill">Takes 30 seconds</span></div>
+      </div>
+      <div class="card">
+        <div class="step-num">02</div>
+        <h3>Track Expenses</h3>
+        <p>Record canteen chai, photocopy notes, metro cards, and mobile recharge in 5 seconds flat with one tap.</p>
+        <div class="foot"><span class="pill">Instant 1-tap logging</span></div>
+      </div>
+      <div class="card">
+        <div class="step-num">03</div>
+        <h3>Understand Spending</h3>
+        <p>See crystal-clear visual charts that show where your money is actually leaking without confusing accounting jargon.</p>
+        <div class="foot"><span class="pill">Live visual charts</span></div>
+      </div>
+      <div class="card">
+        <div class="step-num">04</div>
+        <h3>Save for the Future</h3>
+        <p>Lock in targets for a laptop, new phone, campus trip, or emergency cushion with effortless daily savings.</p>
+        <div class="foot"><span class="pill">Zero sacrifice goals</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. LIVE WEB-APP SHOWCASE ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">LIVE WEB-APP SHOWCASE</span>
+      <h2>See Your Money Clearly</h2>
+      <p>An ultra-clean interface designed so you know your exact financial health in 3 seconds or less.</p>
+    </div>
+    <div class="app-shell">
+      <div class="app-top">
+        <div>
+          <small>Live Student Account</small>
+          <h3>Monthly Pocket Money: ₹10,000</h3>
+        </div>
+        <span class="status-pill">🟢 Status: On Track</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><small>Allocated Budget</small><strong>₹10,000</strong></div>
+        <div class="stat"><small>Total Spent</small><strong>₹3,250</strong></div>
+        <div class="stat"><small>Money Remaining</small><strong>₹6,750</strong></div>
+        <div class="stat"><small>Protected Savings</small><strong>₹2,000</strong></div>
+      </div>
+      <div class="guard">
+        <div class="guard-top">
+          <div>
+            <h4>Daily Guard Rail</h4>
+            <div class="big">₹300</div>
+          </div>
+        </div>
+        <div class="guard-cells">
+          <div><small>Spent Today</small><strong>₹220</strong></div>
+          <div><small>Remaining For Today</small><strong>₹80</strong></div>
+          <div><small>Daily Limit</small><strong>₹300</strong></div>
+        </div>
+      </div>
+      <div class="breakdown">
+        <h4>Live Category Breakdown</h4>
+        <div class="bar-row">
+          <div class="bar-label">Food <small>₹1,200</small></div>
+          <div class="bar"><i style="width:70%;background:var(--green)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Shopping <small>₹800</small></div>
+          <div class="bar"><i style="width:55%;background:var(--red)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Transport (Metro/Bus) <small>₹500</small></div>
+          <div class="bar"><i style="width:35%;background:var(--amber)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Education <small>₹450</small></div>
+          <div class="bar"><i style="width:30%;background:var(--green-soft)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Entertainment <small>₹300</small></div>
+          <div class="bar"><i style="width:20%;background:var(--green-dark)"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. SMART SAVING ============ -->
+<section class="section alt">
+  <div class="container saving-wrap">
+    <div>
+      <span class="eyebrow">PURPOSE-DRIVEN MONEY</span>
+      <h2>Turn Small Savings Into Big Goals</h2>
+      <p>Saving doesn't mean stopping all the fun with your friends. Put aside just ₹80 or ₹100 a day to unlock that gadget, certification, or vacation.</p>
+      <div class="saving-note">
+        <span style="font-size:20px">💡</span>
+        <div>
+          <b>Save a little today. Reach your goal tomorrow.</b>
+          <span>Consistent micro-savings build unbeatable financial discipline.</span>
+        </div>
+      </div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-head">
+        <div>
+          <h3>New Laptop &amp; Tech Fund</h3>
+          <small>Target Date: End of Semester</small>
+        </div>
+        <span class="badge-pill">25% Complete</span>
+      </div>
+      <div class="goal-stats">
+        <div><small>Target</small><strong>₹20,000</strong></div>
+        <div><small>Saved</small><strong>₹5,000</strong></div>
+        <div><small>Remaining</small><strong>₹15,000</strong></div>
+        <div><small>Monthly Need</small><strong>₹2,500</strong></div>
+      </div>
+      <div class="progress-meta">Progress to Target <small>₹5,000 of ₹20,000</small></div>
+      <div class="big-bar"><i></i></div>
+      <button type="button" class="btn btn-primary">Create My Saving Goal</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. CAMPUS HACKS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">REAL CAMPUS HACKS</span>
+      <h2>Spend Less Without Missing Out</h2>
+      <p>Simple student hacks that preserve your lifestyle while saving thousands every term.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card hack">
+        <div class="icon-box">🍛</div>
+        <h3>Smart Food Choices</h3>
+        <p>Opt for college canteen thalis, packed home lunch boxes, and seasonal fruit stalls over delivery apps.</p>
+        <div class="budget"><small>Typical Student Budget:</small><strong>₹30 – ₹70 / meal</strong></div>
+      </div>
+      <div class="card hack">
+        <div class="icon-box">🥤</div>
+        <h3>Hydration &amp; Drinks</h3>
+        <p>Carry a steel reusable bottle, choose local fresh buttermilk or lemon water instead of ₹150 cafe drinks.</p>
+        <div class="budget"><small>Typical Student Budget:</small><strong>₹5 – ₹20 / drink</strong></div>
+      </div>
+      <div class="card hack">
+        <div class="icon-box">📚</div>
+        <h3>Education &amp; Study</h3>
+        <p>Borrow from the college library, purchase seniors' used textbooks, and utilize shared department Google Drives.</p>
+        <div class="budget"><small>Typical Student Budget:</small><strong>₹0 – ₹150 / term</strong></div>
+      </div>
+      <div class="card hack">
+        <div class="icon-box">🚌</div>
+        <h3>Commute &amp; Passes</h3>
+        <p>Apply for student city bus/metro concession passes, share campus auto carpools, or use campus bicycle racks.</p>
+        <div class="budget"><small>Typical Student Budget:</small><strong>₹200 – ₹400 / month</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. COMMUNITY DIRECTORY ============ -->
+<section class="section alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">COMMUNITY DIRECTORY</span>
+      <h2>Find Budget-Friendly Options</h2>
+      <p>Discover vetted student-first hubs near your campus that offer honest pricing without commercial markups.</p>
+    </div>
+    <div class="hubs">
+      <div class="hub"><div class="icon-circle">🍽️</div><h4>College Canteen</h4><p>Subsidized hot meals</p></div>
+      <div class="hub"><div class="icon-circle">🛒</div><h4>Local Supermarket</h4><p>Bulk staples &amp; essentials</p></div>
+      <div class="hub"><div class="icon-circle">🍎</div><h4>Fruit Mandi</h4><p>Cheap healthy produce</p></div>
+      <div class="hub"><div class="icon-circle">🖨️</div><h4>Print Shop</h4><p>₹0.50/page printing</p></div>
+      <div class="hub"><div class="icon-circle">📖</div><h4>Used Book Bazaar</h4><p>70% off textbooks</p></div>
+      <div class="hub"><div class="icon-circle">🚍</div><h4>Transport Terminal</h4><p>Student pass renewal</p></div>
+    </div>
+    <div class="directory-bottom">
+      <div>
+        <h4>Explore recommendations for your campus</h4>
+        <p>Connect with peer tips tailored to universities in your area.</p>
+      </div>
+      <a href="#final" class="btn btn-primary">Find Options Near Me</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. FINANCIAL STATUS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">INSTANT FEEDBACK</span>
+      <h2>Always Know Your Financial Status</h2>
+      <p>No confusing graphs. Clean status indicators tell you whether you can afford that weekend plan.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card status-card safe">
+        <div class="icon-box">✅</div>
+        <div class="sub">Active Now</div>
+        <h3>You're Doing Great!</h3>
+        <p>You are currently spending well within your planned monthly pace. Keep this up and your full savings goal will be met.</p>
+        <div class="meter" style="margin-top:20px">
+          <div class="bar-label">32.5% Used <small>₹6,750 Remaining</small></div>
+          <div class="bar"><i style="width:32.5%"></i></div>
+        </div>
+      </div>
+      <div class="card status-card warn">
+        <div class="icon-box">⚠️</div>
+        <div class="sub">Pacing Warning</div>
+        <h3>Be Careful</h3>
+        <p>You are spending faster than your day-by-day plan. Pause non-essential food ordering and take public transit for 3 days.</p>
+        <div class="meter" style="margin-top:20px">
+          <div class="bar-label">78% Used <small>₹2,200 Remaining</small></div>
+          <div class="bar"><i style="width:78%"></i></div>
+        </div>
+      </div>
+      <div class="card status-card alert">
+        <div class="icon-box">🛑</div>
+        <div class="sub">Limit Exceeded</div>
+        <h3>Over Budget</h3>
+        <p>You have exceeded your allowance for this cycle. Immediate reset recommended: lock entertainment spending until the 1st.</p>
+        <div class="meter" style="margin-top:20px">
+          <div class="bar-label">104% Used <small>₹400 Deficit</small></div>
+          <div class="bar"><i style="width:100%"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. SAVINGS CALCULATOR ============ -->
+<section class="section alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">INTERACTIVE FORECAST</span>
+      <h2>How Much Can You Save?</h2>
+      <p>Simulate your allowance vs typical monthly expenses to reveal your hidden annual wealth.</p>
+    </div>
+    <div class="calc-wrap">
+      <div class="calc-grid">
+        <div>
+          <div class="field">
+            <label for="budget">Monthly Budget / Pocket Money</label>
+            <div class="input-wrap"><b>₹</b><input id="budget" type="number" min="0" value="10000" /></div>
+          </div>
+          <div class="field">
+            <label for="expenses">Estimated Monthly Expenses</label>
+            <div class="input-wrap"><b>₹</b><input id="expenses" type="number" min="0" value="7500" /></div>
+          </div>
+          <div style="background:var(--section);border-radius:16px;padding:16px">
+            <small style="color:var(--muted);font-weight:600">Potential Monthly Savings</small>
+            <div id="monthlySavings" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--green-dark);margin-top:6px">₹2,500</div>
+          </div>
+        </div>
+        <div class="calc-result">
+          <small>12-Month Potential Projection</small>
+          <div class="amount" id="yearlySavings">₹30,000</div>
+          <p>That's enough for a high-performance laptop, two semesters of certification courses, or a memorable semester-break trip!</p>
+          <a href="#final" class="btn btn-primary">Plan My Savings Habit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. BENEFITS ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">UNMATCHED PEACE OF MIND</span>
+      <h2>Why Students Will Love It</h2>
+      <p>We eliminated complicated accounting spreadsheets and created a clean habit builder.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card benefit"><div class="icon-box">🔍</div><h3>No More Mysteries</h3><p>Eliminate the end-of-the-month shock. Always know where every single rupee went without reviewing paper receipts.</p></div>
+      <div class="card benefit"><div class="icon-box">🧠</div><h3>Better Decisions</h3><p>Understand personal lifestyle triggers without tedious financial charts or formulas. Easy intuition over numbers.</p></div>
+      <div class="card benefit"><div class="icon-box">🌱</div><h3>Effortless Savings</h3><p>Build bulletproof financial discipline early without sacrificing your social life or skipping hangouts with friends.</p></div>
+      <div class="card benefit"><div class="icon-box">🏆</div><h3>Reach Real Goals</h3><p>Turn big dreams into accessible realities: new headphones, project supplies, campus trips, and self-confidence.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. FINAL CTA + LEAD FORM ============ -->
+<section class="final" id="final">
+  <div class="container">
+    <div class="final-card">
+      <span class="eyebrow">START RIGHT NOW</span>
+      <h2>Your Money. Your Goals. Your Plan.</h2>
+      <p class="lead">Start tracking your expenses today and make every rupee count towards your campus freedom and future.</p>
+
+      <form class="lead-form" id="leadForm" novalidate>
+        <div class="row">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your full name" required />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="10-digit mobile number" required />
+          </div>
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Start My Budget Now</button>
+        <div class="form-msg" id="formMsg"></div>
+        <div class="pay-box" id="payBox">
+          <a href="https://payments.cashfree.com/forms/getaudit" target="_blank" rel="noopener">Free Audit for ₹1 &rarr;</a>
+        </div>
+      </form>
+
+      <div class="final-foot">Free • Simple • Student-friendly • No banking login required</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">Built by students, for students • 100% Free</div>
+</footer>
+
+<script>
+  // ===== CONFIG =====
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKX8z22ol_jPu8iEGKvhLVByAfxArm9lnFuONbYeAHXfvkKQhNn-vxTPhwHUjowl5jTg/exec";
+
+  // ===== Savings calculator =====
+  const budgetEl = document.getElementById('budget');
+  const expensesEl = document.getElementById('expenses');
+  const monthlyEl = document.getElementById('monthlySavings');
+  const yearlyEl = document.getElementById('yearlySavings');
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+  function updateCalc() {
+    const monthly = (Number(budgetEl.value) || 0) - (Number(expensesEl.value) || 0);
+    monthlyEl.textContent = fmt(monthly);
+    yearlyEl.textContent = fmt(monthly * 12);
+  }
+  budgetEl.addEventListener('input', updateCalc);
+  expensesEl.addEventListener('input', updateCalc);
+  updateCalc();
+
+  // ===== Lead form =====
+  const form = document.getElementById('leadForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const msg = document.getElementById('formMsg');
+  const payBox = document.getElementById('payBox');
+
+  function showSuccess() {
+    msg.className = 'form-msg ok';
+    msg.textContent = 'Thanks! Your details are saved. Continue to your Free Audit below.';
+    payBox.classList.add('show');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Start My Budget Now';
+    form.reset();
+  }
+
+  function showError() {
+    msg.className = 'form-msg err';
+    msg.textContent = 'Something went wrong. Please check your connection and try again.';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Start My Budget Now';
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    if (!name || !email || !phone) {
+      msg.className = 'form-msg err';
+      msg.textContent = 'Please fill in name, email and phone.';
+      return;
+    }
+
+    msg.className = 'form-msg';
+    msg.textContent = '';
+    payBox.classList.remove('show');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+
+    const url = SCRIPT_URL + "?" + new URLSearchParams({ name, email, phone });
+
+    fetch(url, { method: "GET", mode: "no-cors" })
+      .then(() => showSuccess())
+      .catch(() => showError());
+  });
+</script>
+
+</body>
+</html>
